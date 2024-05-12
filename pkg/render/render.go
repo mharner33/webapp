@@ -9,6 +9,10 @@ import (
 	"text/template"
 )
 
+func NewTemplate() {
+
+}
+
 // Renders the template with name templ
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	//Create a template cache so we don't need to read from disk
@@ -34,7 +38,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	}
 }
 
-func createTemplateCache() (map[string]*template.Template, error) {
+func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
 	//get all of the *.tmpl files from templates folder
