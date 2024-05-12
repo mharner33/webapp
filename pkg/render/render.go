@@ -7,27 +7,33 @@ import (
 	"net/http"
 	"path/filepath"
 	"text/template"
+
+	"github.com/mharner33/webapp/pkg/config"
 )
 
-func NewTemplate() {
+var app *config.AppConfig
 
+func NewTemplate(a *config.AppConfig) {
+	app = a
 }
 
 // Renders the template with name templ
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	//Create a template cache so we don't need to read from disk
-	tc, err := createTemplateCache()
-	if err != nil {
-		log.Fatal(err)
+	var tc map[string]*template.Template
+	if app.UseCache {
+		//Create a template cache so we don't need to read from disk
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
 	}
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(ok)
+		log.Fatal("Could not get template from cache")
 	}
 
 	buff := new(bytes.Buffer)
-	err = t.Execute(buff, nil)
+	err := t.Execute(buff, nil)
 	if err != nil {
 		log.Println(err)
 	}
