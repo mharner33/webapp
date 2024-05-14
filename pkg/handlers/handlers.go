@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/mharner33/webapp/pkg/config"
+	"github.com/mharner33/webapp/pkg/models"
 	"github.com/mharner33/webapp/pkg/render"
 )
 
@@ -27,8 +28,13 @@ func NewHandlers(r *Repository) {
 }
 
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.tmpl")
+	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.tmpl")
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hello World"
+
+	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }

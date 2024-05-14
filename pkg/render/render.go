@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/mharner33/webapp/pkg/config"
+	"github.com/mharner33/webapp/pkg/models"
 )
 
 var app *config.AppConfig
@@ -17,8 +18,14 @@ func NewTemplate(a *config.AppConfig) {
 	app = a
 }
 
+// Returns data that should be available to all functions
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+
+	return td
+}
+
 // Renders the template with name templ
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	if app.UseCache {
 		//Create a template cache so we don't need to read from disk
@@ -33,7 +40,10 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	}
 
 	buff := new(bytes.Buffer)
-	err := t.Execute(buff, nil)
+
+	td = AddDefaultData(td)
+
+	err := t.Execute(buff, td)
 	if err != nil {
 		log.Println(err)
 	}
